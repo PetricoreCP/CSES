@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-constexpr int MOD = 1e9 + 7;
+constexpr int MOD = 1E9 + 7;
 
 int32_t main() {
     ios::sync_with_stdio(false);
