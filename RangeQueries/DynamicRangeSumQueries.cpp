@@ -11,8 +11,8 @@ struct SumSegTree {
     SumSegTree(const vector<T>& v) {
         while (n < v.size()) n <<= 1;
         tree.resize(n << 1, 0);
-        for (int i = 1; i < v.size(); i ++) {
-            tree[n + i] = v[i];
+        for (int i = 0; i < v.size(); i ++) {
+            tree[n + i + 1] = v[i];
         } 
         for (int i = n - 1; i > 0; i --) {
             tree[i] = tree[i << 1] + tree[(i << 1) + 1];
@@ -51,8 +51,8 @@ int main() {
     cin.tie(nullptr);
     int n, q;
     cin >> n >> q;
-    vector<long long> v(n + 1);
-    for (int i = 1; i <= n; i ++) {
+    vector<long long> v(n);
+    for (int i = 0; i < n; i ++) {
         cin >> v[i];
     }
     SumSegTree<long long> tree(v);
