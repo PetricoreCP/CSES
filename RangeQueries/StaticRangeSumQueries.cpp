@@ -9,13 +9,13 @@ int main() {
     cin.tie(nullptr);
     int n, q;
     cin >> n >> q;
-    vector<long long> v(n + 1);
-    for (int i = 1; i <= n; i ++) {
+    vector<long long> v(n);
+    for (int i = 0; i < n; i ++) {
         cin >> v[i];
     }
     vector<long long> prefixSum(n + 1);
     for (int i = 1; i <= n; i ++) {
-        prefixSum[i] = prefixSum[i - 1] + v[i];
+        prefixSum[i] = prefixSum[i - 1] + v[i - 1];
     }
     while (q --) {
         int l, r;
