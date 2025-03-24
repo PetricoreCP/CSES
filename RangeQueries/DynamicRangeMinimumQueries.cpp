@@ -13,7 +13,7 @@ struct MinSegTree
     {
         while (n < v.size()) n <<= 1;
         tree.resize(n << 1, numeric_limits<T>::max());
-        for (int i = 0; i < v.size(); i ++) tree[n + i + 1] = v[i];
+        for (int i = 0; i < v.size(); i ++) tree[n + i] = v[i];
         for (int i = n - 1; i > 0; i --) tree[i] = min(tree[i << 1], tree[(i << 1) + 1]);
     }
     T query(int l, int r) 
@@ -68,12 +68,15 @@ int main()
             int i;
             long long x;
             cin >> i >> x;
+            i --;
             tree.update(i, x);
         }
         else 
         {
             int l, r;
             cin >> l >> r;
+            l --;
+            r --;
             cout << tree.query(l, r) << '\n';
         }
     }
