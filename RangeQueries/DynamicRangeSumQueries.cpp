@@ -1,52 +1,51 @@
 // Range Queries
-// Segment Tree Sum Queries
+// Fenwick Tree Sum Queries
 // https://cses.fi/problemset/task/1648
 #include <bits/stdc++.h>
 using namespace std;
 
 template<typename T>
-struct SumSegTree 
+struct FenTree
 {
-    int n = 1;
-    vector<T> tree;
-    SumSegTree(const vector<T>& v) 
+    int n;
+    vector<T> bit;
+    FenTree(const vector<T>& v)  
     {
-        while (n < v.size()) n <<= 1;
-        tree.resize(n << 1, 0);
-        for (int i = 0; i < v.size(); i ++) tree[n + i] = v[i];
-        for (int i = n - 1; i > 0; i --) tree[i] = tree[i << 1] + tree[(i << 1) + 1];
-    }
-    T query(int l, int r) 
-    {
-        l += n;
-        r += n;
-        T res = 0;
-        while (l <= r) 
+        n = v.size() + 1;
+        bit.resize(n);
+        for (int i = 1; i < n; i ++) bit[i] = v[i - 1];
+        for (int i = 1; i < n; i ++) 
         {
-            if (l & 1) 
-            {
-                res += tree[l];
-                l ++;
-            }
-            if (!(r & 1)) 
-            {
-                res += tree[r];
-                r --;
-            }
-            l >>= 1;
-            r >>= 1;
+            int p = i + (i & (-i));
+            if (p < n) bit[p] += bit[i];
         }
-        return res;
     }
     void update(int i, T x) 
     {
-        i += n;
-        tree[i] = x;
-        while ((i >> 1) > 0) 
+        T delta = x - query(i, i); 
+        add(i, delta);
+    }
+    void add(int i, T x) 
+    {
+        while (i < n) 
         {
-            i >>= 1;
-            tree[i] = tree[i << 1] + tree[(i << 1) + 1];
+            bit[i] += x;
+            i += i & (-i);
         }
+    }
+    T prefix(int i) 
+    {
+        T res = 0;
+        while (i > 0) 
+        {
+            res += bit[i];
+            i -= (i & -i);
+        }
+        return res;
+    }
+    T query(int l, int r)
+    {
+        return prefix(r) - prefix(l - 1);
     }
 };
 
@@ -58,7 +57,7 @@ int main()
     cin >> n >> q;
     vector<long long> v(n);
     for (int i = 0; i < n; i ++) cin >> v[i];
-    SumSegTree<long long> tree(v);
+    FenTree<long long> bit(v);
     while (q --) 
     {
         int t;
@@ -68,16 +67,13 @@ int main()
             int i;
             long long x;
             cin >> i >> x;
-            i --;
-            tree.update(i, x);
+            bit.update(i, x);
         }
         else 
         {
             int l, r;
             cin >> l >> r;
-            l --;
-            r --;
-            cout << tree.query(l, r) << '\n';
+            cout << bit.query(l, r) << '\n';
         }
     }
     return 0;
