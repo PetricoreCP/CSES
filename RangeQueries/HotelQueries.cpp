@@ -12,7 +12,7 @@ struct MaxSegTree
     MaxSegTree(const vector<T>& v) 
     {
         while (n < v.size()) n <<= 1;
-        tree.resize(n << 1, 0);
+        tree.resize(n << 1, numeric_limits<T>::min());
         for (int i = 0; i < v.size(); i ++) tree[n + i] = v[i];
         for (int i = n - 1; i > 0; i --) tree[i] = max(tree[i << 1], tree[(i << 1) + 1]);   
     }
@@ -20,7 +20,7 @@ struct MaxSegTree
     {
         l += n;
         r += n;
-        T res = 0;
+        T res = numeric_limits<T>::min();
         while (l <= r) 
         {
             if (l & 1) 
