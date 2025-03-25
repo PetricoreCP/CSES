@@ -7,12 +7,13 @@ using namespace std;
 template<typename T>
 struct FenTree
 {
-    int n;
+    int n, msb = 1;
     vector<T> bit;
     FenTree(int sz) 
     {
         n = sz + 1;
         bit.resize(n);
+        while ((msb << 1) < n) msb <<= 1;
     }
     FenTree(const vector<T>& v) : FenTree(v.size())
     {
@@ -52,18 +53,17 @@ struct FenTree
     }  
     int find(T x) 
     {
+        if (prefix(n - 1) < x) return -1;
         int i = 0;
-        int msb = 1;
-        while ((msb << 1) < n) msb <<= 1;
-        while (msb > 0) 
+        T curr = 0;
+        for (int b = msb; b > 0; b >>= 1) 
         {
-            int j = i + msb;
-            if (j < n && bit[j] < x)
+            int j = i | b;
+            if (j < n && curr + bit[j] < x)
             {
-                x -= bit[j];
+                curr += bit[j];
                 i = j;
             }
-            msb >>= 1;
         }
         return i + 1;
     }
